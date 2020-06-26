@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+
 const DinerContext = React.createContext();
+
 export const DinerConsumer = DinerContext.Consumer;
+
 class DinerProvider extends Component {
   state = { diners: [] }
   componentDidMount() {
@@ -40,6 +43,11 @@ class DinerProvider extends Component {
       })
   }
   deleteDiner = (id) => {
+    axios.delete(`/api/diners/${id}`)
+      .then( res => {
+        const { diners } = this.state
+        this.setState({ diners: diners.filter( d => d.id !== id )})
+      })
   }
   render() {
     return(
@@ -47,6 +55,7 @@ class DinerProvider extends Component {
         ...this.state,
         addDiner: this.addDiner,
         updateDiner: this.updateDiner,
+        deleteDiner: this.deleteDiner,
       }}>
         { this.props.children }
       </DinerContext.Provider>
